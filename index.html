@@ -2,10 +2,17 @@
 <html>
 <head>
     <meta charset='utf-8'/>
-    <title></title>
-    <link rel='stylesheet' href='css/style.css'/>
+    <title>Buffon's needle</title>
 </head>
 <body>
+    <p>
+        number of throws:
+        <input id='throws' type='range' value='1000' min='1000' max='10000' step='1000' />
+        <span id='throws_value'></span>
+    </p>
+    <p>number of hits = <span id='hits' /></p>
+    <p>pi = <span id='pi' /></p>
+    <p>error = <span id='error' />%</p>
     <canvas id='canvas'></canvas>
     <script src='js/jquery-2.1.4.js'></script>
     <script src='js/scripts.js'></script>
