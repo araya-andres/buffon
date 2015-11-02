@@ -65,7 +65,7 @@ Needle.prototype.inside = function(floorboard) {
 }
 
 function throwNeedles(numberOfThrows) {
-    const WIDTH = 300, HEIGHT = 300;
+    const WIDTH = 600, HEIGHT = 600;
     var numberOfThrows = numberOfThrows || 100;
     var canvas = $('#canvas')[0];
     var ctx = canvas.getContext('2d');
@@ -96,11 +96,11 @@ function throwNeedles(numberOfThrows) {
 
 var run = function ()
 {
-    var n = $('#throws').val();
-    var hits = throwNeedles(parseInt(n));
+    throwNeedles(parseInt($('#throws').val()));
 }
 
 $(document).ready(function () {
     $('#throws').click(run);
+    $('#throw_button').click(run);
     run();
 });
