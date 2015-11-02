@@ -91,40 +91,35 @@ Buffon.prototype.calc = function () {
 }
 
 function UI(canvas, numberOfThrows, hits, pi, error) {
-    const WIDTH = 600,
-          HEIGHT = 600;
     this.canvas = canvas;
     this.numberOfThrows = numberOfThrows;
     this.hits = hits;
     this.pi = pi;
     this.error = error;
-    this.canvas.width = WIDTH;
-    this.canvas.height = HEIGHT;
-    this.floorboard = new Floorboard(WIDTH / 3, 0, WIDTH / 3, HEIGHT);
-    this.buffon = new Buffon(this.floorboard);
 }
 
-UI.prototype.draw = function () {
+UI.prototype.draw = function (buffon) {
     var ctx = canvas.getContext('2d');
-    var buffon = this.buffon;
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     this.numberOfThrows.text(buffon.numberOfThrows);
     this.hits.text(buffon.hits);
     this.pi.text(buffon.pi);
     this.error.text(buffon.error);
-    this.floorboard.draw(ctx);
+    buffon.floorboard.draw(ctx);
     buffon.needles.forEach(function (needle) { needle.draw(ctx); });
 }
 
-UI.prototype.update = function(numberOfThrows) {
-    this.buffon.numberOfThrows = numberOfThrows;
-    this.buffon.calc();
-    this.draw();
-}
-
 $(document).ready(function () {
-    var ui = new UI($('#canvas')[0], $('#throws_value'), $('#hits'), $('#pi'), $('#error'));
-    var callback = function () { ui.update(parseInt($('#throws').val())); };
+    var canvas, ui, buffon, callback;
+    canvas = $('#canvas')[0];
+    canvas.width = canvas.height = 600;
+    ui = new UI(canvas, $('#throws_value'), $('#hits'), $('#pi'), $('#error'));
+    buffon = new Buffon(new Floorboard(canvas.width / 3, 0, canvas.width / 3, canvas.height));
+    callback = function () {
+        buffon.numberOfThrows = parseInt($('#throws').val());
+        buffon.calc();
+        ui.draw(buffon);
+    };
     $('#throws').click(callback);
     $('#throw_button').click(callback);
     callback();
