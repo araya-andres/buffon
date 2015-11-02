@@ -64,39 +64,37 @@ Needle.prototype.inside = function(floorboard) {
     return floorboard.contain(this.getP1()) && floorboard.contain(this.getP2());
 }
 
-function throwNeedles(numberOfThrows) {
-    const WIDTH = 600, HEIGHT = 600;
-    var numberOfThrows = numberOfThrows || 100;
+function draw(width, height, floorboard, needles, hits, pi, error) {
     var canvas = $('#canvas')[0];
     var ctx = canvas.getContext('2d');
-    var floorboard = new Floorboard(WIDTH / 3, 0, WIDTH / 3, HEIGHT);
-    var needle;
-    var needleLength = floorboard.width / 3;
-    var hits = 0, pi;
-
-    canvas.width = WIDTH;
-    canvas.height = HEIGHT;
+    canvas.width = width;
+    canvas.height = height;
     floorboard.draw(ctx);
+    needles.forEach(function (needle) { needle.draw(ctx); });
+    $('#throws_value').text(needles.length);
+    $('#hits').text(hits);
+    $('#pi').text(pi);
+    $('#error').text(error + '%');
+}
+
+var run = function () {
+    var width = height = 600;
+    var floorboard = new Floorboard(width / 3, 0, width / 3, height);
+    var numberOfThrows = parseInt($('#throws').val());
+    var needle, needles = [], needleLength = floorboard.width / 3;
+    var hits = 0, pi, error, i;
+
     for (i = 0; i < numberOfThrows; ++i) {
         needle = new Needle(new Point(getRandomInt(floorboard.x, floorboard.x + floorboard.width),
                                       getRandomInt(0, floorboard.height)),
-        getRandomInt(-90, 90),
-        needleLength);
-        needle.draw(ctx);
-        if (!needle.inside(floorboard)) {
-            hits++;
-        }
+                            getRandomInt(-90, 90),
+                            needleLength);
+        if (!needle.inside(floorboard)) hits++;
+        needles.push(needle);
     }
     pi = 2 * needleLength * numberOfThrows / (floorboard.width * hits);
-    $('#throws_value').text(numberOfThrows);
-    $('#hits').text(hits);
-    $('#pi').text(pi);
-    $('#error').text((100 * (pi - Math.PI) / Math.PI) + '%');
-}
-
-var run = function ()
-{
-    throwNeedles(parseInt($('#throws').val()));
+    error = 100 * (pi - Math.PI) / Math.PI;
+    draw(width, height, floorboard, needles, hits, pi, error);
 }
 
 $(document).ready(function () {
